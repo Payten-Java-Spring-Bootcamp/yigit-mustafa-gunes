@@ -1,0 +1,361 @@
+# <u>**PAYTEN JAVA & SPRING BOOTCAMP**</u>
+
+
+
+## Bölüm Sonu Ödev 1 / ARAŞTIRMA
+
+
+
+- ## <u>**"Pass by Value" ve "Pass by Reference" Kavramlarının Java ile İlişkisi;**</u>
+
+---
+
+Java'da metotlara parametreler geçirilmeden önce parametrenin değeri belirlenir. Bu belirlenen değer bellekte bir alana kopyalanır ve daha sonra parametre aktarımı yapılır. Parametre aktarımı yapılırken is bu bellek alanının adresinin kendisi değil kopyası metoda gönderilir. Bu olaya "Pass by value" denir. Kısaca metoda gönderilen parametre metot içinde değişse de metottan çıkınca yine eski değerini alır.
+
+
+
+Bir fonksiyon içine geçirilen değerin fonksiyonun dışında da değişeceği çalışma şekline "Pass by reference" 
+
+denir.  
+
+<u>Java pass by value çalışan bir dildir</u>
+
+Bununla ilgili güzel bir kodlama örneği mevcut;
+
+```java
+public class Person {
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+Öncelikle bir Person class'ı oluşturulmuş. Class içine name adında bir alan eklenip ```getter```, ```setter ``` ve name değerini yazacak şekilde ```toString()```  metodu tanımlanmış.
+
+```java
+public class TestSwap {
+
+    public static void main(String[] args) {
+
+        Person p1 = new Person("Metin");
+        Person p2 = new Person("Yusuf");
+
+        System.out.println("----------main----------");
+        System.out.println(p1);
+        System.out.println(p2);
+
+        swap(p1, p2);
+
+        System.out.println("----------main2----------");
+        System.out.println(p1);
+        System.out.println(p2);
+    }
+
+    private static void swap(Person p1Param, Person p2Param) {
+
+        Person temp = p1Param;
+        p1Param = p2Param;
+        p2Param = temp;
+
+        System.out.println("----------swap----------");
+        System.out.println(p1Param);
+        System.out.println(p2Param);
+    }
+}
+```
+
+Ve yukarıdaki kodumuzun çıktısı aşağıdaki gibidir;
+
+```java
+----------main----------
+Metin
+Yusuf
+----------swap----------
+Yusuf
+Metin
+----------main2----------
+Metin
+Yusuf
+```
+
+Görüldüğü üzere değerlerimiz metot dışına çıkınca geri eski değerlerini almıştır.
+
+![1_1qtMlQ_NhKhtlNd8nBNQ6w](https://user-images.githubusercontent.com/84538553/146823483-0823783c-0a76-49ad-9407-b9c75ca300fd.png)
+
+Main metodunda p1'in değeri “Metin”, p2'nin değeri “Yusuf” olarak atanıyor. Bellekteki gösterimi yukarıdaki gibidir.
+
+![1_OC4FD4cyfu0AH1ZhObtlNQ](https://user-images.githubusercontent.com/84538553/146823569-b76c3748-40f2-4ec0-83a1-8a7f193b03e0.png)
+
+Swap metoduna p1 ve p2 nesneleri parametre olarak geçiyoruz ve p1'in değeri p1Param’a ve p2'nin değeri p2Param’a kopyalanıyor. Nesneleri swap edebilmek için ayrıca temp nesnesini kullanıyoruz. Swap işleminden sonra bellekteki durum aşağıdaki gibidir;
+
+![1_6l9M-Tw5shFrazlNbVp_jA](https://user-images.githubusercontent.com/84538553/146823733-2a09c1ea-4b46-4769-9dcc-2034ba2b19a8.png)
+
+p1Param ve p2Param nesneleri artık birbirlerinin değerlerini gösteriyor. ***Java pass by value olduğundan bu değişim p1 ve p2 nesnelerini etkilemiyor.\*** Tekrar main metoduna dönüldüğünde swap kısmı stack’ten çıkartılıyor.
+
+![1_1qtMlQ_NhKhtlNd8nBNQ6w (1)](https://user-images.githubusercontent.com/84538553/146823855-5e07309b-7ce3-4c70-9c76-dd67f86275c0.png)
+
+Son durum yukarıdaki gibidir.
+
+
+
+Kaynak: https://metinalniacik.medium.com/java-pass-by-reference-m%C4%B1-yoksa-pass-by-value-mu-a0f8935772b5
+
+Yazar: Metin Alnıaçık
+
+Kaynak 2: https://stackoverflow.com/questions/40480/is-java-pass-by-reference-or-pass-by-value?utm_campaign=DonanimHaber&utm_medium=referral&utm_source=DonanimHaber
+
+Kaynak 3: http://yazilimogreniyoruz.com/java-ile-nesne-yonelimli-programlama-pass-by-value-or-reference/
+
+
+
+- ## **<u>Java'da Immutable Class ve Immutability;</u>**
+
+---
+
+
+
+Javada **immutable** yani değişmez yapılar vardır. String, Boolean, Integer gibi bütün wrapper classlar immutable’dır. Immutable classlar bir kere oluşturulur ve değişmezler. Bu durumun bize sağladığı avantajlar ise şu şekilde belirtilebilir:
+
+**Basit tasarım**; Nesne bir kere oluşturulduktan sonra nesne üzerinde oluşan değişimler her adımda nesneyi başka bir duruma gotürecektir. Nesne olmaması gereken durumlara sürüklenebilir, ya da nesnenin karşılaşabileceği her değişimi belgelemek durumunda kalabiliriz. Bu nedenle immutable classlar tek ve değişmez olmalarıyla bize büyük rahatlık sağlar.
+
+**Güvenlik**; Immutable nesneler ilk değerlerini constructur üzerinden alırlar ve bu değerde sabit kalırlar ve senkronize çalişmak zorunda kalmazlar. Bu da onların thread-safe olmasını sağlar.
+
+Immutable class oluşturmak için gerekli olan özellikler şu şekilde sıralanabilir:
+
+1. Class içerisinde tanımlanan değişkenler ***private\*** olmalı. Çünkü dışarıdan herhangi bir müdahalede bulunulmamalı.
+2. Class içerisindeki değişkenlerin ***setter\*** methodları olmamalı. Bu da dışarıdan gelecek müdahalelere karşı sıkı bir önlem.
+3. Değişkenler ***final\*** olarak işaretlenmeli. Bilindiği üzere final işaretlenen değişkenler ilk değeri aldıktan sonra değiştirilemezler.
+4. Final işaretlenen bu alanların ilk değerleri ***constructur\*** ile verilmeli.
+5. Ve son olarak classımızı da final işaretlemeliyiz. Extend edilmemesi gerekiyor.
+
+
+
+Kaynak: https://medium.com/kodcular/immutable-class-nedir-ve-neden-class-final-i%CC%87%C5%9Faretlenmeli-c75c9cd33cee
+
+Yazar: Nesrin Asan
+
+
+
+- ## **<u>Framework ve library arasındaki fark;</u>**
+
+---
+
+Library, basitleştirilmiş kod fonksiyonlar topluluğudur.
+
+Framework ise yazılacak uygulamanın bir nevi iskelet çatısıdır. İçinin gerekli kodlar ve kütüphaneler kullanılarak doldurulması gerekir fakat yine de Frameworkler sayesinde uygulamanın temeli atılmış olur.
+
+Kaynak: https://stackoverflow.com/questions/148747/what-is-the-difference-between-a-framework-and-a-library
+
+
+
+Frameworkler ve kütüphaneler başkası tarafından yazılmış yeniden kullanılabilir koddur. Amaçları, ortak problemleri daha kolay yoldan çözmenize yardımcı olmaktır.
+
+Library ile Framework ‘ün ayrıştığı nokta teknik kısımdır. İki arasındaki temel teknik fark,  kodun nasıl çağrıldığıdır. Library kullanırken, library size bazı özellikler vererek kullanmanızı sağlar, bu şekilde almış olduğunuzu kodu kendi sisteminize uygularken size kodu nerede ve ne zaman kullanacağınıza karışmaz veya bir diğer deyişle dikte etmez.  Framework ise Library'in tersine  kullanacağız özelliğe göre kodu nerede ve ne zaman kullanacağınız söyler, kullanacağız bu işlev, eğer Framework dokümanın belirtildiği gibi kullanılmaz ise kullanım dışı kalır.
+
+Library'lerin ürünlerde ve programlarda kullanımı sırasında uygulamaya oluşturan kişi, Library'in  özelliklerini kullanımında tamamen bağımsız hareket eder. Kodun herhangi bir yerinde ve istediği zaman Library 'in vermiş olduğu kodları kullanabilir. Frameworkte ise verilen araçların kullanımı her zaman olmasada genellikle belli kurallara haizdir.  Mesela ben bu site içerisinde bir JS Framework'ü olan React'ı kullanıyorum. Bu kullanım sırasında React bana vermiş olduğu özellikler için belirli sınırlamalar belirlemiş, eğer bu sınırların dışına çıkarsam kodum çalışmaz. Buradan da anlayacağınız üzere, yazmış olduğum kod React tarafından kontrol edilmekte, çağrılmakta ve buna göre işlem yapılmakta.
+
+Kaynak: https://bylge.com/p/library-ile-framework-arasindaki-fark-5ea8c58b212aff000763ba12
+
+
+
+- ## **<u>Java'da Garbage Collector;</u>**
+
+---
+
+**Garbage Collection İşlemi**
+
+Garbage Collection, otomatik bellek yönetimi mekanizmasıdır. Bu işlem heap belleğe bakıp, kullanılan objelerin tespit edilmesi ve referans edilmeyenlerin silinmesi üzerine kuruludur. Kullanılmayan/referans edilmeyen nesnelerin kapladığı alan bellekte boşa çıkarılır ve bellekte boş yer açılmış olur. Bu işlemi yapan mekanizmaya da **Garbage Collector** denir.
+
+### **Generational Garbage Collection**
+
+Buradan sonra biraz daha JVM’de nesnelerin nasıl tutulduğuna bakacağız. Bu bilgiler sayesinde JVM’in çalışma zamanında performansı hakkında fikir sahibi olabileceğiz. JVM, heap alanını ‘**generation(jenerasyon/kuşak)**’ adı verilen küçük parçalara bölmüştür.
+
+![Java-Garbage-Collection](https://user-images.githubusercontent.com/84538553/147283493-b65faac2-81f5-4c6a-a659-cbdc260fd18b.jpg)
+
+Üstte görebileceğiniz gibi 3 temel kuşak vardır. Gelin şimdi bunlara detaylı bakalım.
+
+**Young Generation(Genç Kuşak):** Bu kuşak tüm yeni nesnelerin oluşturulduğu ve yaşlanmaya başladığı kuşaktır. Yeni oluşan nesneler bu kuşakta tutulur. Young Generation dolduğunda ise bu ileride göreceğimiz bir başlık olan ‘**Minor Garbage Collection**’ işlemini tetikler. Ölü/kullanılmayan/unreferenced nesneler burada çok hızlı dolar ve toplanmayı bekler. Belli bir süre sonra ‘surviving’ hayatta kalan nesneler ‘Old Generation’ alanına taşınır.
+
+**Old Generation(Yaşlı Kuşak):** Bu kuşak uzun süre hayatta kalan nesnelerin bellekte tutulduğu yerdir. Genç kuşakta belli bir süre(belirlenmiş bir threashold değeri kadar) duran nesneler bu kuşağa alınır. Old Generation dolduğunda ise ‘**Major Garbage Collection**’ işlemini tetikler.
+
+**Stop-the-World:** Bütün minor ve major garbage collection işlemleri ‘Stop-the-World’ eventlerdir. Yani garbage collector işini yaparken uygulamadaki tüm diğer threadler durur. Ta ki garbage collector işini yapana kadar. Bu sebeple garbage collector optimizasyonu çok önemlidir. Minor ve Major garbage collection işlemlerinin sayısını düşürerek uygulamanızın daha performanslı ve stabil çalışmasını sağlayabilirsiniz. Tabiki bu durum uygulamadan uygulamaya değişiklik gösterebilir. Bu sebeple Garbage Collector Tuning yapılmalıdır.
+
+**Permanent Generation(Kalıcı Kuşak):** Bu kuşak JVM tarafından gerekli olan class ve methodlar hakkında metadataları tutar. Uygulamanın çalışma esnasında dolabilir. Ayrıca Java SE’de yer alan kütüphane sınıfları ve metodları da burada tutulabilir. Bu kuşağın çöp toplama işlemi ‘Full Garbage Collection’ içinde yer alır.
+
+
+
+Kaynak: https://stackify.com/what-is-java-garbage-collection/
+
+Yazar: Alexandra Altvater
+
+
+
+### **Minor/Major/Full Garbage Collection İşlemleri**
+
+**Minor GC**
+
+JVM’de belleğin kuşaklara bölünmesini ve bu kuşakların mantığını anladık. Şimdi bu alanların birbirleriyle olan ilişkisini inceleyelim. JVM’de aging(yaşlanma) işleminin nasıl olduğunu görelim.
+
+**1. Aşama:** Başlangıçta yeni oluşturulan tüm nesneler ‘**eden**’ alanında oluşturulur. Üstteki heap yapısının yer aldığı görselde gördüğünüz ‘Surviving Space’ alanı ilk başta boştur.
+
+![1_0XSdfTLKoxw38uFc3TIy4A](https://user-images.githubusercontent.com/84538553/147284112-57e79c1f-f748-459b-a3d7-6dfb19899123.png)
+
+**2. Aşama:** ‘eden’ alanı dolduğunda minor garbage collection işlemi tetiklenir.
+
+![1_N2SU9GL9DZzEeAHL_IkPZQ](https://user-images.githubusercontent.com/84538553/147284183-0050904c-0307-461b-960f-9e73cb42c59e.png)
+
+**3. Aşama:** Referansı olan/kullanılan nesneler S0 ‘surviving space’ alanına taşınır. Kullanılmayan/unreferenced nesneler ise silinir.
+
+![1_pBI1yBLOs21wA1X5Wbb6zg](https://user-images.githubusercontent.com/84538553/147284254-f627cfcc-0fdc-4933-9eb8-819e0e24d36c.png)
+
+**4. Aşama:** Buraya kadar bir minor garbage collection sürecini gördük. Bir sonraki minor garbage collection işleminde eden alanı için aynı işlem uygulanır. Ancak ufak bir farklılıkla. İlk işlemde yaşlanan nesneler S0 alanına taşınmıştı, bu sefer S1 alanına taşınır. Bir önceki Minor GC işleminde S0 alanına alınan nesnelerinde yaşı arttırılır ve S1 alanına alınır. Tüm referans edilen nesneler S1 alanına alındıktan sonra ‘eden’ ve S0 alanları temizlenir.
+
+![1_SxU2sCW4tV4VbY0H72ifpw](https://user-images.githubusercontent.com/84538553/147284460-dd8670ac-fe9b-423f-b14c-7b931388df12.png)
+
+**5. Aşama:** Bir sonraki minor garbage collection işleminde de aynısı olur. Bu sefer yine surviving alanları değişir. Bir önceki minor GC işleminde S1 alanına alınan nesnelerin yaşları arttırılarak S0 alanına alınır, ‘eden’ alanındaki referenced nesnelerde S0 alanına alınır. S1 ve ‘eden’ alanları temizlenir. Bu işlem sürekli bu şekilde devam eder. Neden ‘eden’ alanı olduğu ve neden 2 adet surviving alanı olduğu bu şekilde daha açıklayıcı olmuştur umarım. Yeni oluşturulan nesnelerin bulunabileceği yer ve nesneleri yaşlandırma işlemini yapabilmek için bu şekilde ‘Young Generation’ 3 alana bölünmüştür.
+
+![1_OF-3sowpx73y0jKbgvCvFw](https://user-images.githubusercontent.com/84538553/147284571-8e26de7a-537b-4317-bccb-d46abcc5e8a1.png)
+
+**6. Aşama:** Minor garbage collection işlemi ardından belli bir yaş değerine ulaşan nesneler (aşağıdaki örnekte bu limit 8) ‘Old Generation’ alanına alınır. Yani Minor Garbage Collection işlemi ‘Young Generation’ alanında nesnelerin yer değiştirmesinden ve belli bir yaşa ulaşında bu nesnelerin ‘Old Generation’ alanına alınmasından sorumludur.
+
+![1_mGdQuv988a-Xn3ZHRXSybw](https://user-images.githubusercontent.com/84538553/147284648-ecb2c7ee-9e4b-4c9b-bde1-38f0e49a6f5f.png)
+
+![1_ozIRORuFiTpRIOyU4lrV2A](https://user-images.githubusercontent.com/84538553/147284684-58f4e023-e740-40cd-9c53-5d8a376a7af0.png)
+
+Kaynak: https://tugrulbayrak.medium.com/jvm-garbage-collector-nedir-96e76b6f6239
+
+Yazar: Tuğrul Bayrak
+
+**Major GC**
+
+Eski nesil alanında çalışır ve eski nesil nesneleri temizler. Minor GC ye göre yavaştır. Major GC genellikle Minor GC’den sonra tetiklendiği için Full GC olarak algılanır. Major GC **Stop the World** çalışır.
+
+**Full GC**
+
+üm heap alanında çalışır ve kullanılmayan tüm nesneleri heap alanından temizler. Full GC **Stop the World** çalışır. Kodlama içerisinde Full GC çalıştırmak için ```System.gc();``` çağırmanız yeterli olacaktır.
+
+
+
+Kaynak: https://caglartelef.com/java-garbage-collector-nasil-calisir/
+
+Yazar: Çağlar Telef
+
+
+
+- ## <u>Java'da Memory Leak;</u>
+
+---
+
+Java'nın en temel avantajlarından biri de Garbage Collector (GC) yardımıyla otomatikleştirilmiş bellek yönetimidir. GC, dolaylı olarak bellek ayırma ve boşaltma ile ilgilenir ve bu nedenle bellek sızıntısı sorunlarının çoğunu ele alabilir. GC, belleğin önemli bir bölümünü etkin bir şekilde yönetse de, bellek sızıntısına karşı kusursuz bir çözümü garanti etmez. GC oldukça akıllıdır, ancak kusursuz değildir. Bilinçli bir geliştiricinin uygulamalarında bile bellek sızıntıları ortaya çıkabilir. Bellek sızıntısı Java'da gerçek bir sorundur.
+
+**Peki nedir bu bellek sızıntısı (memory leak)?**
+
+Bellek Sızıntısı, Heap'de artık kullanılmayan nesnelerin bulunduğu ancak GC'nin bunları bellekten çıkaramadığı ve gereksiz yere koruduğu durumdur.
+
+Bellek sızıntısı kötüdür çünkü zaman içinde sistem performansını düşürür ve eğer ele alınmazsa, uygulama kaynakları tüketecek ve *Java.lang.OutOfMemoryError* ile sona erecektir.
+
+Heap belleğinde referanslı ve referanssız olmak üzere iki nesne türü vardır. Referanslı nesneler, uygulama içinde hala aktif referansları olan ve kullanılan nesnelerdir. Referanssız nesnelerin ise kelimenin kendi anlamından da anlaşılacağı üzere aktif olan ve kullanılan bir referansı mevcut değildir.
+
+GC, referanssız nesneleri periyodik olarak kaldırır ancak referansı olan nesneleri asla toplamaz. Bellek sızıntılarının meydana gelebileceği yer de tam olarak burasıdır.
+
+![Memory-_Leak-_In-_Java](https://user-images.githubusercontent.com/84538553/147288156-e1894bb7-4e8b-405f-8bc5-5d0682711f84.jpg)
+
+**Memory Leak Semptomları;**
+
+- Uzun süreli çalışmalarda ciddi performans düşüklüğü.
+- *OutOfMermoryError* hatasının fırlatılması.
+- Uygulamanın durduk yere çökmesi.
+- Uygulamada ara sıra bağlantı sorunları yaşanması.
+
+Kaynak: https://www.baeldung.com/java-memory-leaks
+
+
+
+- ## <u>**Java Sürümleri Ne Sıklıkla Çıkmaktadır?**</u>
+
+---
+
+![1_672a_nR4eMJc3Rk74EohWQ](https://user-images.githubusercontent.com/84538553/147288956-af4ddac3-049b-4835-ae20-94e3aa5e7559.png)
+
+Oracle, Long-term support(LTS) yani uzun süre destekli Java sürümlerini her 3 yılda bir çıkaracağını, onun dışında non-LTS sürümleri de her 6 ayda bir çıkaracağını duyurmuştu. Bunu da sitesinde Java SE yol haritası olarak yayınladı. 
+
+Kaynak: https://www.oracle.com/tr/java/
+
+Kaynak: https://tr.wikipedia.org/wiki/Java_(programlama_dili)
+
+
+
+- ## <u>**Stack ve Heap**</u>
+
+---
+
+**Stack** ve **Heap** kavramlarından kısaca bahsetmek gerekirse, ram’in **mantıksal** bölümleridir diyebiliriz. Stack’de **değer** **tipleri**, pointer ve adresler saklanırken, Heap’de ise **referans değerleri** saklanmaktadır.
+
+Stack’e erişim Heap’den daha hızlıdır ve Stack, **LIFO** (Last-In-First-Out) mantığında çalışmaktadır. Yani son gelen ilk olarak çıkar. Bu sebep ile aradan herhangi bir eleman çıkartamazsınız, birbirleri ile ilişki içerisindedirler.
+
+**Struct** tipindeki değişkenler değer tipleridir ve **Stack** içerisinde saklanmaktadır. **Class** tipindeki değişkenler ise **referans** tipleridir ve referansları **Stack’de** kendisi ise **Heap’de** saklanır.
+
+
+
+- Stack ve Heap ram’in mantıksal bölümleridir**.**
+- Stack LIFO mantığında çalışır. Yani son gelen ilk olarak çıkar.
+- Stack’de değer tipleri, pointer ve adresler saklanırken Heap’de ise referans değerleri saklanır.
+- Stack daha hızlıdır. Ulaşılmak istenen veriler ard arda sıralanmış olur.
+- Heap ortak olarak kullanılır ve uygulama başlatıldığında başlar.
+
+
+
+Kaynak: https://www.gokhan-gokalp.com/stack-heap-kavramlari/
+
+
+
+- ## <u>OpenJDK ve OracleJDK arasındaki farklar</u>
+
+---
+
+**OpenJDK**
+
+OpenJDK, 6 ayda bir yalnızca bir sonraki özellik sürümüne kadar desteklenen bir özellik sürümüne sahip. Temel olarak, geliştiricilere yönelik sürekli bir yayın akışı sağlanır. 
+
+**Oracle JDK**
+
+Oracle JDK, istikrarı önemseyen kurumsal bir kitleye yöneliktir. OpenJDK sürümlerinden birine dayanıyor ancak daha sonra uzun süreli destek verilir (LTS). Oracle JDK, her 3 yılda bir planlanan sürümlere sahiptir. 
+
+
+
+- ## <u>@FunctionalInterface Annotation</u>
+
+---
+
+Fonksiyonel interface'ler sadece 1 abstract metot bulundurabilir. Ve eğer sadece 1 abstract methodumuz varsa aynı zamanda lambda ifadeleri kullanabiliriz. Eğer @FunctionalInterface anotasyonunu görüyorsanız bu başka bir method ekleyemeyeceğiniz anlamına gelir çünkü tasarım bozulur. 
+
+Kaynak: https://stackoverflow.com/questions/50892117/why-to-use-functionalinterface-annotation-in-java-8
+
+
+
+- ## **<u>Java’da hangi functional interface’ler yer almaktadır?</u>**
+
+---
+
+Popüler olanlar;
+
+1. Predicate Interface
+2. Consumer Interface
+3. Supplier Interface
+4. Function Interface
